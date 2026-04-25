@@ -43,4 +43,28 @@ tree = ttk.Treeview(tree_frame,yscrollcommand=tree_scroll.set, selectmode=BROWSE
 tree.pack()
 
 tree_scroll.config(command = tree.yview)
+
+tree['columns'] = ("id", "name", "address", "age", "number")
+
+tree.column("#0", width=0, stretch=NO)
+tree.column("id", anchor = CENTER, width=80)
+
+tree.column("#0", width=0, stretch=NO)
+tree.column("name", anchor = CENTER, width=120)
+
+tree.column("#0", width=0, stretch=NO)
+tree.column("address", anchor = CENTER, width=120)
+
+tree.column("#0", width=0, stretch=NO)
+tree.column("age", anchor = CENTER, width=50)
+
+tree.column("#0", width=0, stretch=NO)
+tree.column("number", anchor = CENTER, width=80)
+
+tree.heading("id", text="ID", anchor = CENTER)
+tree.heading("name", text="Name", anchor = CENTER)
+tree.heading("address", text="Address", anchor = CENTER)
+tree.heading("age", text="Age", anchor = CENTER)
+tree.heading("number", text="Phone Number", anchor = CENTER)
+
 root.mainloop()
