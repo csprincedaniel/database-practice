@@ -29,4 +29,22 @@ def insert_data():
     conn.commit()
     conn.close()
     
-insert_data()
+
+#insert_data()
+
+def update_data():
+    id = input("Enter id of the student to be updated")
+    name = input("Enter name: ")
+    address = input("Enter address: ")
+    age = input("Enter age: ")
+    number = input("Enter number: ")
+
+    conn = psycopg2.connect(dbname=os.getenv("DB_NAME"), user=os.getenv("DB_USER"), password=os.getenv("DB_PASSWORD"), host=os.getenv("DB_HOST"), port=os.getenv("DB_PORT"))
+    cur = conn.cursor()
+
+    cur.execute("UPDATE students SET name =%s, addrss=%s, age=%s,number=%s WHERE id=%s ",(name, address, age, number, id))
+
+    conn.commit()
+    conn.close()
+
+update_data()
