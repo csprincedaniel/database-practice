@@ -1,5 +1,47 @@
 from tkinter import *
 from tkinter import ttk
+import psycopg2
+from tkinter import messagebox
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def run_query(query, parameters=()):
+    conn = psycopg2.connect(dbname=os.getenv("DB_NAME"), user=os.getenv("DB_USER"), password=os.getenv("DB_PASSWORD"), host=os.getenv("DB_HOST"), port=os.getenv("DB_PORT"))
+    cur = conn.cursor()
+    result = None
+
+    try:
+        cur.execute(query, parameters )
+        if query.lower().startswith("select"):
+            result = cur.fetchall()
+        conn.commit()
+
+    except psycopg2.Error as e:
+        messagebox.showerror("Database Error", str(e))
+    finally:
+        cur.close()
+        conn.close()
+    return result
+
+
+
+def refresh_treeview():
+    for item in tree.get_children():
+        tree.delete(item)
+    records = run_query("SELECT * FROM students")
+    for record in records:
+        tree.insert('', END, values=record)
+def insert_data():
+    query = "INSERT into students(name, addrss, age, number) values (%s, %s, %s, %s)"
+    parameters = (name.get(), address.get(), age.get(), number.get())
+
+    run_query(query, parameters)
+    messagebox.showinfo("Information", "Data inserted successfully.")
+
+    refresh_treeview()
+
 root = Tk()
 root.title("Student Database Management System")
 #root.geometry("300x300")
@@ -29,7 +71,7 @@ button_frame = Frame(root)
 button_frame.grid(row=1, column=0, pady=5, sticky="ew")
 
 Button(button_frame, text="Create Table").grid(row=0, column=0)
-Button(button_frame, text="Add Data").grid(row=0, column=1)
+Button(button_frame, text="Add Data",command=insert_data).grid(row=0, column=1)
 Button(button_frame, text="Update Data Table").grid(row=0, column=2)
 Button(button_frame, text="Delete Data").grid(row=0, column=3)
 
@@ -66,5 +108,7 @@ tree.heading("name", text="Name", anchor = CENTER)
 tree.heading("address", text="Address", anchor = CENTER)
 tree.heading("age", text="Age", anchor = CENTER)
 tree.heading("number", text="Phone Number", anchor = CENTER)
+
+refresh_treeview()
 
 root.mainloop()
