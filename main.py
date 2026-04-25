@@ -33,6 +33,9 @@ def insert_data():
 #insert_data()
 
 def update_data():
+    conn = psycopg2.connect(dbname=os.getenv("DB_NAME"), user=os.getenv("DB_USER"), password=os.getenv("DB_PASSWORD"), host=os.getenv("DB_HOST"), port=os.getenv("DB_PORT"))
+    cur = conn.cursor()
+
     id = input("Enter id of the student to be updated")
     fields = {
         "1":("name", "Enter the new name"),
@@ -44,11 +47,17 @@ def update_data():
     for key in fields:
         print(f"{key}:{fields[key][0]}")
 
-    conn = psycopg2.connect(dbname=os.getenv("DB_NAME"), user=os.getenv("DB_USER"), password=os.getenv("DB_PASSWORD"), host=os.getenv("DB_HOST"), port=os.getenv("DB_PORT"))
-    cur = conn.cursor()
+    field_choice = input("Enter the number of the field you want to update:")
 
-    cur.execute("UPDATE students SET name =%s, addrss=%s, age=%s,number=%s WHERE id=%s ",(name, address, age, number, id))
-   
+    if field_choice in fields:
+        field_name, prompt = fields[field_choice]
+        newvalue = input(prompt)
+        sql = f"UPDATE STUDENTS set {field_name} = %s WHERE id= %s"
+        cur.execute(sql, (newvalue, id))
+        print(f"{field_name} updated successfully")
+    else:
+        print("This is an invalid choice")
+    
     conn.commit()
     conn.close()
 
