@@ -51,6 +51,23 @@ def delete_data():
     run_query(query, parameters)
     messagebox.showinfo("Information", "data deleted successfully")
     refresh_treeview()
+
+def update_data():
+    selected = tree.selection()[0]
+    id = tree.item(selected)['values'][0]
+    query = "UPDATE STUDENTS SET name=%s, addrss = %s, age=%s, number=%s WHERE id=%s"
+    parameters = (name.get(), address.get(), age.get(), number.get(), id)
+
+    run_query(query, parameters)
+    messagebox.showinfo("Information", "data updated successfully")
+
+    refresh_treeview()
+
+def create_table():
+    query = "CREATE TABLE IF NOT EXISTS students(id serial primary key, name text, addrss text, age int, number text);"
+    run_query()
+    messagebox.showinfo("Information", "table has been created")
+
 root = Tk()
 root.title("Student Database Management System")
 #root.geometry("300x300")
@@ -79,9 +96,9 @@ number.grid(row=3, column=1, pady=2, sticky="ew")
 button_frame = Frame(root)
 button_frame.grid(row=1, column=0, pady=5, sticky="ew")
 
-Button(button_frame, text="Create Table").grid(row=0, column=0)
+Button(button_frame, text="Create Table", command=create_table).grid(row=0, column=0)
 Button(button_frame, text="Add Data",command=insert_data).grid(row=0, column=1)
-Button(button_frame, text="Update Data Table").grid(row=0, column=2)
+Button(button_frame, text="Update Data", command=update_data).grid(row=0, column=2)
 Button(button_frame, text="Delete Data", command=delete_data).grid(row=0, column=3)
 
 tree_frame = Frame(root)
