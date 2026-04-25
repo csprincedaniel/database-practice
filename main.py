@@ -34,10 +34,15 @@ def insert_data():
 
 def update_data():
     id = input("Enter id of the student to be updated")
-    name = input("Enter name: ")
-    address = input("Enter address: ")
-    age = input("Enter age: ")
-    number = input("Enter number: ")
+    fields = {
+        "1":("name", "Enter the new name"),
+        "2":("addrss", "Enter the new address"),
+        "3":("name", "Enter the new name"),
+        "4":("number", "Enter the new number"),
+    }
+    print("Which field would you like to update?")
+    for key in fields:
+        print(f"{key}:{fields[key][0]}")
 
     conn = psycopg2.connect(dbname=os.getenv("DB_NAME"), user=os.getenv("DB_USER"), password=os.getenv("DB_PASSWORD"), host=os.getenv("DB_HOST"), port=os.getenv("DB_PORT"))
     cur = conn.cursor()
